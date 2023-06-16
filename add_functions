@@ -1,0 +1,39 @@
+/* COMO USAR
+
+Adicione o shortcode [incrementar_views] no single ou qualquer parte onde deseja contar as visualizações do seu site. 
+
+Certifique-se de ter criado um meta fields como "views" dentro do CPT antes de usar esse shortcode.
+
+Cole o trecho abaixo no functions.php do seu tema
+*/
+
+function incrementar_views_shortcode($atts) {
+    $attributes = shortcode_atts(array(
+        'print' => '0',
+        'count' => '0'
+    ), $atts);
+
+    // Obtém o ID do post atual
+    $post_id = get_the_ID();
+
+    // Obtém o valor atual do campo "views"
+    $views = get_post_meta($post_id, 'views', true);
+
+    // Incrementa o valor do campo "views"
+    $views++;
+
+    // Atualiza o campo "views" no post
+    update_post_meta($post_id, 'views', $views);
+
+    // Verifica se o atributo 'print' é 1 e imprime o valor no front-end
+    if ($attributes['print'] == '1') {
+        echo 'Views: ' . $views . '<br>';
+    }
+
+    // Verifica se o atributo 'count' é 1 e retorna o valor para contar
+    if ($attributes['count'] == '1') {
+        return $views;
+    }
+}
+
+add_shortcode('incrementar_views', 'incrementar_views_shortcode');
